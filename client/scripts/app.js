@@ -3,7 +3,7 @@ var app = {};
 $(function() {
   app = {
     //GLOBAL VARIABLES;
-    server:'https://api.parse.com/1/classes/chatterbox',
+    server:'http://127.0.0.1:3000',
     username: 'anonymous',
     room: 'lobby',
 
