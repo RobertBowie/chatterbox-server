@@ -145,10 +145,10 @@ $(function() {
       }
       if ( data.roomname === app.room ) {
         var $chat = $('<div class="chat" />');
-        var validMessage = !!data.text;
-        var userFirstChar = data.username ? data.username.charAt(0) : null;
-        var validUser = data.username && userFirstChar !== ';' && userFirstChar !== '%' && userFirstChar !== '+';
-        if (validMessage && validUser) {
+        // var validMessage = !!data.text;
+        // var userFirstChar = data.username ? data.username.charAt(0) : null;
+        // var validUser = data.username && userFirstChar !== ';' && userFirstChar !== '%' && userFirstChar !== '+';
+        // if (validMessage && validUser) {
           var $username = $('<span class = "username" />');
           $username.text(data.username + ': ')
             .attr('data-username', data.username)
@@ -158,8 +158,9 @@ $(function() {
           $username.addClass('.friend');
         }
           var $message = $('<br /><span />');
-          $message.text(data.text)
-            .appendTo($chat);
+          var eitherOr = data.text || data.message;
+          $message.text(eitherOr)
+                  .appendTo($chat);
 
           var $timestamp = $('<span class="timestamp" />');
           $timestamp.text(data.createdAt)
@@ -169,7 +170,7 @@ $(function() {
           // var messageText = '<span class = "username">' + data.username + ':  </span>' + data.text
           //   + '<span class="timestamp">' + data.createdAt + '</span>';
           // $('#chats').prepend('<div class="chat">' + messageText + '</div>');
-        }
+        // }
         app.mostRecent = message.createdAt;
       }
     },

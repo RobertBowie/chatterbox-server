@@ -7,38 +7,36 @@ var headers = {
 };
 
 var template = {results: []}; // chunk.toString()
+var testMessage = {results: [{text: 'Test', username: 'TestName'}]};
 
 var requestHandler = function(request, response) {
   
-  console.log("Serving request type " + request.method + " for url " + request.url + ' header details ' , request );
+  console.log("Serving request type " + request.method + " for url " + request.url );
 
   var statusCode;
 
-  // TODO: changed .url from /send to /classes/messages to make test pass
-  if( request.url !== '/classes/messages' ){
-    statusCode = 404;
-  } else if( request.method === 'POST' && request.url === '/classes/messages' ){
-    statusCode = 201;
-    // messages.push()
-  } else if (request.method === 'GET' && request.url === '/classes/messages' ){
-    statusCode = 200;
-  }
-  // add options
+  if( request.method === 'OPTIONS' ){
+      statusCode = 200;
+      response.writeHead(statusCode, headers);
+      response.end(JSON.stringify(null));
+  } else if( request.method === 'POST' ){
+    var data = '';
+    request.on("data", function(chunk){
+      data += chunk;
+    });
 
-  // .writeHead() writes to the request line and headers of the response,
-  // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
-  // testing - response.setEncoding('utf8');
-  
-  request.on("data", function(chunk){
-    var chnk = JSON.parse(chunk.toString());
-    template.results.push(chnk);
-  });
-  console.log(template);
-  request.on("end", function() {
-    console.log(JSON.stringify(template));
-    response.end(JSON.stringify(template));
-  });
+    statusCode = 201;
+    request.on("end", function(){
+      template.results.push(JSON.parse(data));
+      response.writeHead(statusCode, headers);
+      response.end(JSON.stringify({results: [data]}));
+    });
+
+  } else if(request.method === 'GET' ){
+      statusCode = 200;
+      response.writeHead(statusCode, headers);
+      response.end(JSON.stringify(template));
+  }
 };
 
 
