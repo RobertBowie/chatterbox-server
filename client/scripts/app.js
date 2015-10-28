@@ -53,7 +53,7 @@ $(function() {
     send: function(message) {
       app.startSpinner();
       $.ajax({
-        url: app.server,
+        url: app.server + '/send',
         type: 'POST',
         data: JSON.stringify(message),
         contentType: 'application/json',
@@ -75,10 +75,10 @@ $(function() {
       
       $.ajax({
         // This is the url you should use to communicate with the parse API server.
-        url: app.server,
+        url: app.server + '/log',
         type: 'GET',
         contentType: 'application/json',
-        data: {order: '-createdAt'},
+        // data: {order: '-createdAt'},
         where: {createdAt: ">" + app.mostRecent},
         complete: function () {
           app.stopSpinner();

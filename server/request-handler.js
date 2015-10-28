@@ -15,22 +15,31 @@ var requestHandler = function(request, response) {
 
   var statusCode;
 
+  var urlStr = '' + request.url;
   if( request.method === 'OPTIONS' ){
-      statusCode = 200;
-      response.writeHead(statusCode, headers);
-      response.end(JSON.stringify(null));
-  } else if( request.method === 'POST' ){
-    var data = '';
-    request.on("data", function(chunk){
-      data += chunk;
-    });
+    statusCode = 200;
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify(null));
+  } else if( urlStr.indexOf('log') === -1 ){
+      if( urlStr.indexOf('send') === -1 ){
+        console.log(urlStr, request.url);
+        statusCode = 404;
+        response.writeHead(statusCode, headers);
+        response.end(JSON.stringify(null));
+      }
+      if( request.method === 'POST' ){
+          var data = '';
+          request.on("data", function(chunk){
+            data += chunk;
+          });
 
-    statusCode = 201;
-    request.on("end", function(){
-      template.results.push(JSON.parse(data));
-      response.writeHead(statusCode, headers);
-      response.end(JSON.stringify({results: [data]}));
-    });
+          statusCode = 201;
+          request.on("end", function(){
+            template.results.push(JSON.parse(data));
+            response.writeHead(statusCode, headers);
+            response.end(JSON.stringify({results: [data]}));
+          });
+      }
 
   } else if(request.method === 'GET' ){
       statusCode = 200;
